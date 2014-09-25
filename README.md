@@ -18,28 +18,28 @@ Chuẩn bị:
 ##### Thực hiện các bước sau trên cả hai node:
 Tạo thư mục chứa swift
   
-  mkdir -p /etc/swift
+    mkdir -p /etc/swift
 
 Tạo file cấu hình /etc/swift/swift.conf và chèn nội dung sau:
   
-  [swift-hash]
-  # random unique string that can never change (DO NOT LOSE)
-  swift_hash_path_prefix = xrfuniounenqjnw
-  swift_hash_path_suffix = fLIbertYgibbitZ
+    [swift-hash]
+    # random unique string that can never change (DO NOT LOSE)
+    swift_hash_path_prefix = xrfuniounenqjnw
+    swift_hash_path_suffix = fLIbertYgibbitZ
 
 ##### Trên Storage node:
 Cài đặt các gói cần thiết 
   
-  apt-get install swift swift-account swift-container swift-object xfsprogs -y
+    apt-get install swift swift-account swift-container swift-object xfsprogs -y
 
 Tạo phân vùng đĩa mới để lưu trữ cho swift
 
-  fdisk /dev/sdb
-  mkfs.xfs /dev/sdb1
-  echo "/dev/sdb1 /srv/node/sdb1 xfs noatime,nodiratime,nobarrier,logbufs= 8 0 0" >> /etc/fstab
-  mkdir -p /srv/node/sdb1
-  mount /dev/sdb1 /srv/node/sdb1
-  chown -R swift:swift /srv/node
+    fdisk /dev/sdb
+    mkfs.xfs /dev/sdb1
+    echo "/dev/sdb1 /srv/node/sdb1 xfs noatime,nodiratime,nobarrier,logbufs= 8 0 0" >> /etc/fstab
+    mkdir -p /srv/node/sdb1
+    mount /dev/sdb1 /srv/node/sdb1
+    chown -R swift:swift /srv/node
 
 
 
