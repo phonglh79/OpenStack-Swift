@@ -12,7 +12,7 @@ Mô hình...
 IP...
 Chuẩn bị:
   - 2 máy ảo chạy ubuntu server tương ứng với 2 node.
-  - Với Proxy node, cần cài sẵn OpenStack All In One theo hướng dẫn [*tại đây*](https://github.com/vietstacker/icehouse-aio-ubuntu/blob/master/hd-caidat-openstack-icehouse-aio.md#1-c%C3%A0i-%C4%91%E1%BA%B7t-ubuntu-1204-trong-vmware-workstation)
+  - Với Proxy node, cần cài sẵn OpenStack All In One theo hướng dẫn [*tại đây*](https://github.com/vietstacker/icehouse-aio-ubuntu/blob/master/hd-caidat-openstack-icehouse-aio.md)
   - Với Storage node, cài đặt ubuntu server 12.04 hoặc 14.04 với cấu hình tối thiểu như sau:
 
 ##### Thực hiện các bước sau trên cả hai node:
