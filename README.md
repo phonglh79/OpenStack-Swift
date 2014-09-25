@@ -53,7 +53,7 @@ Chèn nội dung sau, cần chú ý đặt IP cho đúng:
     gid = swift
     log file = /var/log/rsyncd.log
     pid file = /var/run/rsyncd.pid
-    address = 192.168.10.128
+    address = 192.168.10.129
     
     [account]
     max connections = 2
