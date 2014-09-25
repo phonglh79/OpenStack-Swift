@@ -17,9 +17,11 @@ Chuẩn bị:
 
 ##### Thực hiện các bước sau trên cả hai node:
 Tạo thư mục chứa swift
+  
   mkdir -p /etc/swift
 
 Tạo file cấu hình /etc/swift/swift.conf và chèn nội dung sau:
+  
   [swift-hash]
   # random unique string that can never change (DO NOT LOSE)
   swift_hash_path_prefix = xrfuniounenqjnw
@@ -27,6 +29,7 @@ Tạo file cấu hình /etc/swift/swift.conf và chèn nội dung sau:
 
 ##### Trên Storage node:
 Cài đặt các gói cần thiết 
+  
   apt-get install swift swift-account swift-container swift-object xfsprogs -y
 
 Tạo phân vùng đĩa mới để lưu trữ cho swift
