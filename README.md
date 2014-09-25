@@ -1,5 +1,5 @@
 # Hướng dẫn cài đặt, cấu hình Swift      (Object Storage)
-## I. Thông tin lap
+## I. Thông tin LAB
 Bài lap sẽ gồm 3 phần:
   - Phần 1: Cài đặt Swift với mô hình 2 node (Proxy node và Storage node)
   - Phần 2: Mở rộng thêm một Storage node từ mô hình trên (Proxy node và 2 Storage node)
@@ -41,7 +41,7 @@ Tạo phân vùng đĩa mới để lưu trữ cho swift
     mount /dev/sdb1 /srv/node/sdb1
     chown -R swift:swift /srv/node
 
-  **Note:** Trong trường hợp làm như trên mà khi restart máy không tự động mount được ổ cứng thì mở file /etc/fstab, thay dòng "*/dev/sdb1 /srv/node/sdb1 xfs noatime,nodiratime,nobarrier,logbufs= 8 0 0*" bằng "*/dev/sdb1 /srv/node/sdb1 xfs _netdev 0 0*" rồi reboot. <br>
+  **Note:** Trong trường hợp làm như trên mà khi restart máy không tự động mount được ổ cứng thì mở file /etc/fstab, thay dòng *"/dev/sdb1 /srv/node/sdb1 xfs noatime,nodiratime,nobarrier,logbufs= 8 0 0"* bằng *"/dev/sdb1 /srv/node/sdb1 xfs _netdev 0 0"* rồi reboot. <br>
 
 Tiếp theo, tạo file cấu hình cho dịch vụ đồng bộ:
   
