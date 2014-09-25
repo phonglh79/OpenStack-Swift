@@ -41,7 +41,7 @@ Tạo phân vùng đĩa mới để lưu trữ cho swift
     mount /dev/sdb1 /srv/node/sdb1
     chown -R swift:swift /srv/node
 
-  **Note:** Trong trường hợp làm như trên mà khi restart máy không tự động mount được ổ cứng thì mở file /etc/fstab, thay dòng */dev/sdb1 /srv/node/sdb1 xfs noatime,nodiratime,nobarrier,logbufs= 8 0 0* bằng */dev/sdb1 /srv/node/sdb1 xfs _netdev 0 0* rồi reboot. <br>
+  **Note:** Trong trường hợp làm như trên mà khi restart máy không tự động mount được ổ cứng thì mở file /etc/fstab, thay dòng "*/dev/sdb1 /srv/node/sdb1 xfs noatime,nodiratime,nobarrier,logbufs= 8 0 0*" bằng "*/dev/sdb1 /srv/node/sdb1 xfs _netdev 0 0*" rồi reboot. <br>
 
 Tiếp theo, tạo file cấu hình cho dịch vụ đồng bộ:
   
