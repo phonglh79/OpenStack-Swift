@@ -15,6 +15,7 @@ Chuẩn bị:
 ![Cấu hình Proxy node](https://github.com/trananhkma/image/blob/master/mh1.png)
   - Với Storage node, cài đặt ubuntu server 12.04 hoặc 14.04 với cấu hình tối thiểu như sau:
 ![Cấu hình Storage node](https://github.com/trananhkma/image/blob/master/mh2.png)
+
 ##### Thực hiện các bước sau trên cả hai node:
 
 Tạo thư mục chứa swift
