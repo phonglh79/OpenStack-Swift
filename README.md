@@ -9,7 +9,7 @@ Cụ thể sẽ trình bày trong từng phần
 ## II. Các bước cài đặt
 ### 1. Cài đặt Swift với mô hình 2 node
 ![Mô hình mạng](https://github.com/trananhkma/image/blob/master/lab1.png)
-Chuẩn bị:
+##### Chuẩn bị:
   - 2 máy ảo chạy ubuntu server tương ứng với 2 node.
   - Với Proxy node, cần cài sẵn OpenStack All In One theo hướng dẫn [**tại đây**](https://github.com/vietstacker/icehouse-aio-ubuntu/blob/master/hd-caidat-openstack-icehouse-aio.md)
 ![Cấu hình Proxy node](https://github.com/trananhkma/image/blob/master/mh1.png)
