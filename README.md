@@ -8,13 +8,13 @@ Bài lap sẽ gồm 3 phần:
 Cụ thể sẽ trình bày trong từng phần
 ## II. Các bước cài đặt
 ### 1. Cài đặt Swift với mô hình 2 node
-Mô hình...
-IP...
+![Mô hình mạng](https://github.com/trananhkma/image/blob/master/lab1.png)
 Chuẩn bị:
   - 2 máy ảo chạy ubuntu server tương ứng với 2 node.
   - Với Proxy node, cần cài sẵn OpenStack All In One theo hướng dẫn [**tại đây**](https://github.com/vietstacker/icehouse-aio-ubuntu/blob/master/hd-caidat-openstack-icehouse-aio.md)
+![Cấu hình Proxy node](https://github.com/trananhkma/image/blob/master/mh1.png)
   - Với Storage node, cài đặt ubuntu server 12.04 hoặc 14.04 với cấu hình tối thiểu như sau:
-
+![Cấu hình Storage node](https://github.com/trananhkma/image/blob/master/mh2.png)
 ##### Thực hiện các bước sau trên cả hai node:
 Tạo thư mục chứa swift
   
@@ -206,9 +206,10 @@ Vào trình duyệt web trên máy thật gõ địa chỉ của Proxy node, ở
 
 ### 2. Mở rộng mô hình (1 Proxy node + 2 Storage node)
 Mô hình:
+![Mô hình cài đặt](https://github.com/trananhkma/image/blob/master/Lab2.png)
 Phần 2 của bài LAB nhằm mục đích tạo thêm một zone nữa đặt trên node Storage thứ 2 để kiểm tra quá trình sao lưu dữ liệu giữa 2 zone tương ứng với 2 node storage. <br>
 Sau khi đã hoàn thành phần 1, tạo tiếp 1 máy ảo nữa chạy ubuntu 12.04 hoặc 14.04, với cấu hình như sau:
-...
+![Cấu hình Storage node 2](https://github.com/trananhkma/image/blob/master/mh3.png)
 **Trên Storage node 2**
 Tại node này, thực hiện cài đặt và cấu hình giống như phần 1. <br>
 Đầu tiên cũng phải tạo thư mục swift để làm nơi chứa các file cấu hình và Ring:
@@ -313,5 +314,7 @@ Restart các dịch vụ:
 Nếu cả hai lần download đều thành công nghĩa là hệ thống đã hoạt động đúng. Object đã được sao lưu tại hai node storage.
 
 ### 3. Mở rộng dung lượng lưu trữ
+![Mô hình](https://github.com/trananhkma/image/blob/master/Lab3.png)
 Ở phần 2 đã thực hiện add một storage node để thực hiện backup, mỗi storage node có dung lượng là 10GB, tổng dung lượng là 20GB, tuy nhiên dung lượng sử dụng thực tế chỉ là 10GB.<br>
-Ở phần 3 này sẽ thực hiện mở rộng dung lượng sử dụng thực tế, nghĩa là ta phải add thêm ổ cứng ở cả hai node storage.
+Ở phần 3 này sẽ thực hiện mở rộng dung lượng sử dụng thực tế, nghĩa là ta phải add thêm ổ cứng ở cả hai node storage.<br>
+Việc đầu tiên cần phải làm là add thêm ổ cứng mới cho mỗi storage node.
