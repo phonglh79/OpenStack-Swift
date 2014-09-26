@@ -313,4 +313,5 @@ Restart các dịch vụ:
 Nếu cả hai lần download đều thành công nghĩa là hệ thống đã hoạt động đúng. Object đã được sao lưu tại hai node storage.
 
 ### 3. Mở rộng dung lượng lưu trữ
-
+Ở phần 2 đã thực hiện add một storage node để thực hiện backup, mỗi storage node có dung lượng là 10GB, tổng dung lượng là 20GB, tuy nhiên dung lượng sử dụng thực tế chỉ là 10GB.<br>
+Ở phần 3 này sẽ thực hiện mở rộng dung lượng sử dụng thực tế, nghĩa là ta phải add thêm ổ cứng ở cả hai node storage.
