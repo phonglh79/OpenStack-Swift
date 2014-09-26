@@ -12,7 +12,7 @@ Mô hình...
 IP...
 Chuẩn bị:
   - 2 máy ảo chạy ubuntu server tương ứng với 2 node.
-  - Với Proxy node, cần cài sẵn OpenStack All In One theo hướng dẫn [*tại đây*](https://github.com/vietstacker/icehouse-aio-ubuntu/blob/master/hd-caidat-openstack-icehouse-aio.md)
+  - Với Proxy node, cần cài sẵn OpenStack All In One theo hướng dẫn [**tại đây**](https://github.com/vietstacker/icehouse-aio-ubuntu/blob/master/hd-caidat-openstack-icehouse-aio.md)
   - Với Storage node, cài đặt ubuntu server 12.04 hoặc 14.04 với cấu hình tối thiểu như sau:
 
 ##### Thực hiện các bước sau trên cả hai node:
@@ -26,6 +26,8 @@ Tạo file cấu hình /etc/swift/swift.conf và chèn nội dung sau:
     # random unique string that can never change (DO NOT LOSE)
     swift_hash_path_prefix = xrfuniounenqjnw
     swift_hash_path_suffix = fLIbertYgibbitZ
+
+**Node:** Giá trị prefix và suffix trong /etc/swift/swift.conf dùng để tạo một số chuỗi ngẫu nhiên bằng cách băm chuỗi ký tự trên rồi ánh xạ vào Ring theo thuật toán hashing. File này phải giống nhau trên tất cả các node trong cluster.
 
 ##### Trên Storage node:
 Cài đặt các gói cần thiết:
@@ -178,6 +180,7 @@ Tạo các file ring:
 
     scp container.ring.gz object.ring.gz account.ring.gz root@192.168.10.129:/etc/swift
 
+Có thể xem thêm về cú pháp SCP [**tại đây**](https://github.com/trananhkma/trananhkma/blob/master/SCP%20command.md)
 Để chắc chắn, chuyển quyền sở hữu các file config cho user swift:
 
     chown -R swift:swift /etc/swift
@@ -201,5 +204,113 @@ hoặc đơn giản hơn với câu lệnh:
 ##### Kiểm tra dịch vụ:
 Vào trình duyệt web trên máy thật gõ địa chỉ của Proxy node, ở đây là 10.145.48.128. Sau khi đăng nhập, chọn Project > Object Store > Containers thực hiện upload  object. Nếu không báo lỗi gì có nghĩa là đã cài đặt thành công!
 
+### 2. Mở rộng mô hình (1 Proxy node + 2 Storage node)
+Mô hình:
+Phần 2 của bài LAB nhằm mục đích tạo thêm một zone nữa đặt trên node Storage thứ 2 để kiểm tra quá trình sao lưu dữ liệu giữa 2 zone tương ứng với 2 node storage. <br>
+Sau khi đã hoàn thành phần 1, tạo tiếp 1 máy ảo nữa chạy ubuntu 12.04 hoặc 14.04, với cấu hình như sau:
+...
+**Trên Storage node 2**
+Tại node này, thực hiện cài đặt và cấu hình giống như phần 1. <br>
+Đầu tiên cũng phải tạo thư mục swift để làm nơi chứa các file cấu hình và Ring:
 
+    mkdir -p /etc/swift
+
+Tạo file cấu hình /etc/swift/swift.conf để gán giá trị prefix và suffix giống như 2 node trước:
+
+    [swift-hash]
+    # random unique string that can never change (DO NOT LOSE)
+    swift_hash_path_prefix = xrfuniounenqjnw
+    swift_hash_path_suffix = fLIbertYgibbitZ
+
+Sau đó cài đặt các gói của swift:
+
+    apt-get install swift swift-account swift-container swift-object xfsprogs -y
+
+Tiếp theo phải tạo phân vùng ổ cứng mới và đặt nó ở định dạng xfs:
+
+    fdisk /dev/sdb
+    mkfs.xfs /dev/sdb1
+    echo "/dev/sdb1 /srv/node/sdb1 xfs noatime,nodiratime,nobarrier,logbufs= 8 0 0" >> /etc/fstab
+    mkdir -p /srv/node/sdb1
+    mount /dev/sdb1 /srv/node/sdb1
+    chown -R swift:swift /srv/node
+
+Tạo file cấu hình /etc/rsyncd.conf cho dịch vụ đồng bộ, chú ý đặt đúng địa chỉ của Storage node 2:
+
+    uid = swift
+    gid = swift
+    log file = /var/log/rsyncd.log
+    pid file = /var/run/rsyncd.pid
+    address = 192.168.10.130
+    
+    [account]
+    max connections = 2
+    path = /srv/node/
+    read only = false
+    lock file = /var/lock/account.lock
+    
+    [container]
+    max connections = 2
+    path = /srv/node/
+    read only = false
+    lock file = /var/lock/container.lock
+    
+    [object]
+    max connections = 2
+    path = /srv/node/
+    read only = false
+    lock file = /var/lock/object.lock
+
+Sửa file /etc/default/rsync để enable dịch vụ và bật nó lên:
+
+    RSYNC_ENABLE=true
+##
+    service rsync start
+
+Cuối cùng là tạo thư mục swift recon cache và gán quyền:
+
+    mkdir -p /var/swift/recon
+    chown -R swift:swift /var/swift/recon
+
+**Trở lại Proxy node**
+Sau khi cấu hình Storage node 2, ta cần tạo zone đặt trên phân vùng đĩa sdb1:
   
+    cd /etc/swift
+    swift-ring-builder account.builder add z2-192.168.10.130:6002/sdb1 100
+    swift-ring-builder container.builder add z2-192.168.10.130:6001/sdb1 100
+    swift-ring-builder object.builder add z2-192.168.10.130:6000/sdb1 100
+
+Do ring đã tạo ở phần 1 nên không cần tạo lại nữa! <br>
+Tiếp theo phải reblance 3 ring này để tạo ra 3 file ring mới để đẩy về 2 node storage:
+
+    swift-ring-builder account.builder rebalance
+    swift-ring-builder container.builder rebalance
+    swift-ring-builder object.builder rebalance
+
+File ring sau khi được reblance sẽ ghi đè vào file cũ, tiến hành đẩy 3 file này về 2 node storage, nó sẽ tự động ghi đè trên storage node 1.
+
+    scp container.ring.gz object.ring.gz account.ring.gz root@192.168.10.129:/etc/swift
+    scp container.ring.gz object.ring.gz account.ring.gz root@192.168.10.130:/etc/swift
+
+Restart các dịch vụ:
+
+    swift-init proxy start
+    swift-init main start
+    service rsyslog restart
+    service memcached restart
+
+**Restast dịch vụ trên cả 2 Storage node**
+
+    for service in swift-object swift-object-replicator swift-object-updater swift-object-auditor swift-container swift-container-replicator swift-container-updater swift-container-auditor swift-account swift-account-replicator swift-account-reaper swift-account-auditor; do service $service start; done
+    
+    swift-init all start
+
+##### Thực hiện test khả năng sao lưu của 2 Storage node:
+  - Đầu tiên, bật cả 3 node rồi thực hiện upload object để chắc chắn cấu hình đúng.
+  - Tiếp theo, tắt một Storage node 1 và thử download object về
+  - Cuối cùng, tắt Storage node 1, đồng thời bật Storage node 2, thực hiện download object về.
+
+Nếu cả hai lần download đều thành công nghĩa là hệ thống đã hoạt động đúng. Object đã được sao lưu tại hai node storage.
+
+### 3. Mở rộng dung lượng lưu trữ
+
