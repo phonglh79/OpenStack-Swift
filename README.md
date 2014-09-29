@@ -212,7 +212,7 @@ Mô hình:
 Phần 2 của bài LAB nhằm mục đích tạo thêm một zone nữa đặt trên node Storage thứ 2 để kiểm tra quá trình sao lưu dữ liệu giữa 2 zone tương ứng với 2 node storage. <br>
 Sau khi đã hoàn thành phần 1, tạo tiếp 1 máy ảo nữa chạy ubuntu 12.04 hoặc 14.04, với cấu hình như sau:
 ![Cấu hình Storage node 2](https://github.com/trananhkma/image/blob/master/mh3.png)
-**Trên Storage node 2**
+##### Trên Storage node 2
 Tại node này, thực hiện cài đặt và cấu hình giống như phần 1. <br>
 Đầu tiên cũng phải tạo thư mục swift để làm nơi chứa các file cấu hình và Ring:
 
@@ -275,7 +275,7 @@ Cuối cùng là tạo thư mục swift recon cache và gán quyền:
     mkdir -p /var/swift/recon
     chown -R swift:swift /var/swift/recon
 
-**Trở lại Proxy node**
+##### Trở lại Proxy node
 Sau khi cấu hình Storage node 2, ta cần tạo zone đặt trên phân vùng đĩa sdb1:
   
     cd /etc/swift
@@ -302,16 +302,16 @@ Restart các dịch vụ:
     service rsyslog restart
     service memcached restart
 
-**Restast dịch vụ trên cả 2 Storage node**
+##### Restast dịch vụ trên cả 2 Storage node
 
     for service in swift-object swift-object-replicator swift-object-updater swift-object-auditor swift-container swift-container-replicator swift-container-updater swift-container-auditor swift-account swift-account-replicator swift-account-reaper swift-account-auditor; do service $service start; done
-    
+##### 
     swift-init all start
 
 ##### Thực hiện test khả năng sao lưu của 2 Storage node:
   - Đầu tiên, bật cả 3 node rồi thực hiện upload object để chắc chắn cấu hình đúng.
-  - Tiếp theo, tắt một Storage node 1 và thử download object về
-  - Cuối cùng, tắt Storage node 1, đồng thời bật Storage node 2, thực hiện download object về.
+  - Tiếp theo, tắt Storage node 1 và thử download object về
+  - Cuối cùng, bật Storage node 1, đồng thời tắt Storage node 2, thực hiện download object về.
 
 Nếu cả hai lần download đều thành công nghĩa là hệ thống đã hoạt động đúng. Object đã được sao lưu tại hai node storage.
 
