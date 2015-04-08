@@ -16,6 +16,16 @@ Cụ thể sẽ trình bày trong từng phần
   - Với Storage node, cài đặt ubuntu server 12.04 hoặc 14.04 với cấu hình tối thiểu như sau:
 ![Cấu hình Storage node](https://github.com/trananhkma/image/blob/master/mh2.png)
 
+<br>
+Sau khi cài đặt OpenStack theo script đã tạo ra user cho dịch vụ swift nhưng chưa có service và endpoint. Bước đầu tiên là phải tạo service và endpoint cho swift, thực hiện trên proxy node:
+
+    keystone service-create --name=swift --type=object-store --description="OpenStack Object Storage"
+
+Tạo endpoint:
+
+    keystone endpoint-create --region RegionOne --service-id=$(keystone service-list | awk '/ object-store / {print $2}') --publicurl='http://10.145.48.128:8080/v1/AUTH_%(tenant_id)s' --internalurl='http://10.145.48.128:8080/v1/AUTH_%(tenant_id)s' --adminurl=http://10.145.48.128:8080
+
+
 ##### Thực hiện các bước sau trên cả hai node:
 
 Tạo thư mục chứa swift
@@ -29,7 +39,7 @@ Tạo file cấu hình /etc/swift/swift.conf và chèn nội dung sau:
     swift_hash_path_prefix = xrfuniounenqjnw
     swift_hash_path_suffix = fLIbertYgibbitZ
 
-**Node:** Giá trị prefix và suffix trong /etc/swift/swift.conf dùng để tạo một số chuỗi ngẫu nhiên bằng cách băm chuỗi ký tự trên rồi ánh xạ vào Ring theo thuật toán hashing. File này phải giống nhau trên tất cả các node trong cluster.
+**Note:** Giá trị prefix và suffix trong /etc/swift/swift.conf dùng để tạo một số chuỗi ngẫu nhiên bằng cách băm chuỗi ký tự trên rồi ánh xạ vào Ring theo thuật toán hashing. File này phải giống nhau trên tất cả các node trong cluster.
 
 ##### Trên Storage node:
 Cài đặt các gói cần thiết:
